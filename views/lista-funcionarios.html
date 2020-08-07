@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="funcionarioCadastro">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+
+    <link rel="stylesheet"
+      href="../assets/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../styles/novo-funcionario.css">
+
+    <script src="../lib/angular-1.8.0/angular.js"></script>
+    <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+    <script type="text/javascript"
+      src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script type="text/javascript"
+      src="../bower_components/angular-ui-mask/dist/mask.js"></script>
+
+    <script src="../scripts/app.js"></script>
+    <script src="../scripts/utils/format.js"></script>
+    <script src="../scripts/utils/errorHandler.js"></script>
+
+    <script src="../scripts/controllers/listFuncionariosCtrl.js"></script>
+
+    <script src="../scripts/services/controllerBridge.js"></script>
+
+    <script src="../scripts/services/funcionariosAPIService.js"></script>
+    <script src="../scripts/services/enderecosAPIService.js"></script>
+    <script src="../scripts/services/telefonesAPIService.js"></script>
+
+  </head>
+  <body class="bg-light" ng-controller="listFuncionariosCtrl">
+
+    <div class="container">
+
+      <a class="btn btn-primary" href="novo-funcionario.html">
+        <i class="fa fa-user fa-fw"></i>Novo funcionario
+      </a>
+
+      <h3>{{screenName}}</h3>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" width="10px">ID</th>
+            <th scope="col" width="180px">Nome</th>
+            <th scope="col" width="180px">CPF</th>
+            <th scope="col" width="80px">Nascimento</th>
+            <th scope="col" width="5px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr ng-repeat="telefone in telefones"> -->
+          <tr ng-repeat="funcionario in funcionarios">
+            <td>{{funcionario.id}}</td>
+            <td>{{funcionario.nome}}</td>
+            <td>{{funcionario.cpf}}</td>
+            <td>{{funcionario.dataNascimento}}</td>
+            <td>
+              <a ng-click=editarFuncionario({{funcionario.id}}) class="btn btn-primary"
+                href="novo-funcionario.html?id={{funcionario.id}}">
+                <i class="fa fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+  </body>
+</html>

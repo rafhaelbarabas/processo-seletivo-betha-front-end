@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="funcionarioCadastro">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Funcionários</title>
+
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../styles/novo-funcionario.css">
+
+    <script src="../lib/angular-1.8.0/angular.js"></script>
+    <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script type="text/javascript" src="../bower_components/angular-ui-mask/dist/mask.js"></script>
+    
+    <script src="../scripts/app.js"></script>
+    <script src="../scripts/utils/format.js"></script>
+    <script src="../scripts/utils/errorHandler.js"></script>
+
+    <script src="../scripts/controllers/funcionariosCtrl.js"></script>
+    <script src="../scripts/services/controllerBridge.js"></script>
+    <script src="../scripts/services/funcionariosAPIService.js"></script>
+    <script src="../scripts/services/enderecosAPIService.js"></script>
+    <script src="../scripts/services/telefonesAPIService.js"></script>
+
+  </head>
+
+  <body class="bg-light" ng-controller="funcionariosCtrl">
+    <div class="container">
+      
+      <h4 class="mb-3">{{screenName}}</h4>
+      
+      <!-- <form action="lista-funcionarios.html"> -->
+      <form>
+
+        <div class="row">
+
+          <div class="col-md-12 mb-2">
+            <label for="nome">Nome completo</label>
+            <input class="form-control" type="text" name="nome" id="nome"
+              ng-model="funcionario.nome">
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-8 mb-2">
+            <label for="cpf">CPF</label>
+            <input class="form-control" type="text" name="cpf" id="cpf"
+              ui-mask="999.999.999-99" ng-model="funcionario.cpf">
+          </div>
+
+          <div class="col-md-4 mb-2">
+            <label for="dataNascimento">Data de Nascimento</label>
+            <input class="form-control" type="text" name="dataNascimento"
+              id="dataNascimento" ui-mask="99/99/9999"
+              ng-model="funcionario.dataNascimento">
+          </div>
+          <script>
+            
+          </script>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="row">
+
+          <div class="col-md-8 mb-2">
+            <label for="endereco">Endereço</label>
+            <input type="text" class="form-control" name="endereco"
+              id="endereco" placeholder="Av, Rua, numero, bairro..."
+              ng-model="endereco.logradouro">
+          </div>
+
+          <div class="col-md-4 mb-2">
+            <label for="cep">CEP</label>
+            <input type="text" class="form-control" name="cep" id="cep" ui-mask='99999-999' ng-model="endereco.cep">
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-4 mb-2">
+
+            <label for="estado">Estado</label>
+            <select class="custom-select d-block w-100" name="estado"
+              id="estado" ng-model="endereco.estado" ng-options="estado.sigla for estado in estados"
+              ng-change="getCities(endereco.estado.sigla)">
+              <option value="">Selecione</option>
+            </select>
+
+          </div>
+
+          <div class="col-md-8 mb-2">
+
+            <label for="cidade">Cidade</label>
+            <select ng-disabled="!endereco.estado" class="custom-select d-block
+              w-100" id="cidade" ng-model="endereco.cidade"
+              ng-options="cidade.nome for cidade in cidades">
+              <option value="">Selecione</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <button ng-disabled="!endereco.cidade || !endereco.estado ||
+          !endereco.logradouro" class="btn btn-success"
+          ng-click="novoEndereco(endereco)">
+          + Endereço
+        </button>
+
+        <br><br>
+
+        <div name="table-enderecos" class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Principal</th>
+                <th scope="col">Logradouro</th>
+                <th scope="col">Cidade</th>
+                <th scope="col">Estado</th>
+                <th scope="col">CEP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="endereco in enderecos">
+                <td>
+                  <input type="checkbox" , ng-checked={{endereco.principal}}>
+                </td>
+                <td>{{endereco.logradouro}}</td>
+                <td>{{endereco.cidade}}</td>
+                <td>{{endereco.uf}}</td>
+                <td>{{endereco.cep}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <label for="tipo">Tipo</label>
+            <select class="custom-select d-block w-100" name="tipo" id="tipo"
+              ng-model="telefone.tipo">
+              <option value="">Selecione</option>
+              <option value="C">Celular</option>
+              <option value="F">Fixo</option>
+            </select>
+          </div>
+
+          <div class="col-md-8 mb-2">
+            <label for="numero">Numero</label>
+
+            <input ng-if="telefone.tipo == 'C'" type="text" class="form-control"
+              name="numero" id="numero"
+              ui-mask="(999) 99999-9999" ng-model="telefone.numero">
+
+            <input ng-if="telefone.tipo == 'F'" type="text" class="form-control"
+              name="numero" id="numero"
+              ui-mask="(999) 9999-9999" ng-model="telefone.numero">
+
+          </div>
+
+        </div>
+
+        <div name="table-telefones" class="table-responsive">
+          <button ng-disabled="!telefone.numero || !telefone.tipo" class="btn
+            btn-success" ng-click="novoTelefone(telefone)">
+            + Telefone
+          </button>
+          <br><br>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Tipo</th>
+                <th scope="col">Numero</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="telefone in telefones">
+                <td>{{telefone.tipo == 'C' ? "Celular" : "Fixo"}}</td>
+                <td>{{telefone.numero}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr class="mb-4">
+        <div>
+          <button type="submit" ng-disabled="!funcionario.nome || !funcionario.cpf ||
+            !funcionario.dataNascimento" class="btn btn-primary"
+            ng-click="cadastrarFuncionario(funcionario)">Cadastrar</button>
+          <a class="btn btn-secondary" type="reset" href="lista-funcionarios.html">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+
+  </body>
+</html>

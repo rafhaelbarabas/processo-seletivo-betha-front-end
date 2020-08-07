@@ -1,0 +1,11 @@
+.container {
+  max-width: 750px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;  
+  margin-bottom: 20px;
+}
+
+.list-group{
+  margin-top: 20px;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "processo-seletivo-betha-front-end",
+  "authors": [
+    "rafhaelbarabas <rafhael_ab@hotmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "angular-ui-mask": "^1.8.7"
+  }
+}
